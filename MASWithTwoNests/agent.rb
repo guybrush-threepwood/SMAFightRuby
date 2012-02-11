@@ -5,7 +5,7 @@ include Lib
 
 module MASWithTwoNests
   class Agent
-    attr_reader :target_point
+    attr_accessor :target_point
     attr_reader :dead
     include Rubygame::Sprites::Sprite
     def initialize(world)
@@ -17,9 +17,7 @@ module MASWithTwoNests
     end
 		
 		def move
-			unless @world.is_out?(@target_point)
-				@rect.center = [@target_point.x, @target_point.y]
-			end
+			@rect.center = [@target_point.x, @target_point.y] unless @world.is_out?(@target_point)
 		end
 
     def current_point

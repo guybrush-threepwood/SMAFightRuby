@@ -6,13 +6,12 @@ $LOAD_PATH << '../'
 require "lib/point"
 $LOAD_PATH << './'
 require 'resource'
+include Lib
 
 module MASWithTwoNests
   class World
     attr_accessor :home_getting_bigger
     attr_accessor :bot_start_from_home
-		attr_accessor :screen
-		attr_accessor :background
 
     WIDTH = 600
     HEIGHT = 600
@@ -43,7 +42,11 @@ module MASWithTwoNests
       @background = Rubygame::Surface.new([WIDTH, HEIGHT])
       @agents = Rubygame::Sprites::Group.new
 			Rubygame::Sprites::UpdateGroup.extend_object @agents
-      @agents << Resource.new(self, RESOURCE_START_LIFE, RESOURCE_MOVE_DELAY, RESOURCE_MOVE_SPEED)
+			RESOURCE_COUNT.times do
+      	resource = Resource.new(self, RESOURCE_START_LIFE, RESOURCE_MOVE_DELAY * Random.rand, RESOURCE_MOVE_SPEED * Random.rand)
+				resource.target_point = Point.new(Random.rand * WIDTH, Random.rand * HEIGHT)
+				@agents << resource
+			end
     end
 
     def update(tick)

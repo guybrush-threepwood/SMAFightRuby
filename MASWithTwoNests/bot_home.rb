@@ -16,7 +16,7 @@ module MASWithTwoNests
 			@count_text = ""
 			@image = Rubygame::Surface.new([World::HOME_RADIUS * 2, World::HOME_RADIUS * 2])
 			@rect = @image.make_rect
-			@image.draw_circle_s(@rect.center, Rubygame::Color::ColorRGB.new([0.1, 0.1, 0.1, 1]))
+			@image.draw_circle_s(@rect.center, Rubygame::Color::ColorRGB.new([0.22745, 0.22745, 0.22745, 1]))
 		end
 
 		def add_resource

@@ -9,8 +9,8 @@ require 'rubygame'
 module MASWithTwoNests
   class Resource < Agent
     attr_reader :life
-    def initialize(life, move_delay = 0, speed = 0)
-      super()
+    def initialize(world, life, move_delay = 0, speed = 0)
+      super(world)
       @move_delay = move_delay
       @update_time = 0
       @speed = speed
@@ -23,6 +23,7 @@ module MASWithTwoNests
       @rect = @image.make_rect
       @image.set_colorkey([0, 0, 0])
       change_direction
+			@image.draw_circle_s(@rect.center, (World::RESOURCE_LIFE_RADIUS_COEFF * @life), Rubygame::Color::ColorRGB.new([0.8, 0.8 , 0.8, 1])) if @life > 0
     end
 
     def decrease_life
@@ -33,14 +34,19 @@ module MASWithTwoNests
       @life = @life + World::RESOURCE_UPDATE_VALUE
     end
 
-    def draw(arg)
-      @image.draw_circle_s(@rect.topleft, World::RESOURCE_LIFE_RADIUS_COEFF * @life, Rubygame::Color::ColorRGB.new([0, 0 , 1, 1]))
-      super(arg)
-    end
+    def update(tick, world)
+			@dead = true if @life <= 0
 
-    def update(clock)
+			@update_time += tick.milliseconds
+			if @update_time > @move_delay || world.is_out?(@target_point)
+				change_direction
+				@update_time = 0
+			end
+			
+			@target_point.x = @target_point.x + @direction.x * @speed * tick.seconds
+			@target_point.y = @target_point.y + @direction.y * @speed * tick.seconds
 
-
-    end
+			move
+		end
   end
 end

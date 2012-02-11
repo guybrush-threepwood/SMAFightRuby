@@ -8,15 +8,22 @@ module MASWithTwoNests
     attr_reader :target_point
     attr_reader :dead
     include Rubygame::Sprites::Sprite
-    def initialize
-      super
+    def initialize(world)
+      super()
+			@world = world
       @target_point = Point.new
       @direction = Point.new
       @dead = false
     end
+		
+		def move
+			unless @world.is_out?(@target_point)
+				@rect.center = [@target_point.x, @target_point.y]
+			end
+		end
 
     def current_point
-      Point.new(rect.x, rect.y)
+      Point.new(rect.center[0], rect.center[1])
     end
 
     def change_direction

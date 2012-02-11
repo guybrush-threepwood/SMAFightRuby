@@ -11,6 +11,8 @@ module MASWithTwoNests
   class World
     attr_accessor :home_getting_bigger
     attr_accessor :bot_start_from_home
+		attr_accessor :screen
+		attr_accessor :background
 
     WIDTH = 600
     HEIGHT = 600
@@ -28,32 +30,45 @@ module MASWithTwoNests
 		RESOURCE_UPDATE_VALUE = 0.1
 		RESOURCE_RESPAWN_DELAY = 500
 		RESOURCE_COUNT = 15
-		RESOURCE_MOVE_DELAY = 7000
+		RESOURCE_MOVE_DELAY = 500
 		RESOURCE_MOVE_SPEED = 110
 
 		HOME_RADIUS = 10
 		RESOURCE_RANDOM_START_LIFE = true
 
-    def initialize
+    def initialize(screen)
+			@screen = screen
       @home_getting_bigger = true
       @bot_start_from_home = false
       @background = Rubygame::Surface.new([WIDTH, HEIGHT])
       @agents = Rubygame::Sprites::Group.new
-      @agents << Resource.new(3)
+			Rubygame::Sprites::UpdateGroup.extend_object @agents
+      @agents << Resource.new(self, RESOURCE_START_LIFE, RESOURCE_MOVE_DELAY, RESOURCE_MOVE_SPEED)
     end
 
-    def update(clock)
-      @agents.update(clock)
+    def update(tick)
+			@background.blit @screen, [0, 0]
+			@agents.undraw @screen, @background
+      @agents.update(tick, self)
+			@agents.draw @screen
+			clean_dead_agents
+			check_collisions
     end
 
-    def draw(screen)
-      @background.blit(screen, [0, 0])
-      @agents.draw(screen)
+		def clean_dead_agents
+			@agents.each do |a|
+				@agents.kill(a) if a.dead
+			end
+		end
+
+		def check_collisions
+			#@agents.each do |i,j|
+				#TODO: dispatch event if collided
+			#end	
+		end
+
+    def is_out?(target_point)
+			return true if (( target_point.x <= 0 || target_point.x >= WIDTH) || target_point.y <= 0 || target_point.y >= HEIGHT)
     end
-
-    def is_out?
-
-    end
-
   end
 end

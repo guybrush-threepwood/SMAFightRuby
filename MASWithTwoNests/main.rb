@@ -10,11 +10,12 @@ module MASWithTwoNests
     def initialize
       @screen = Screen.new [800, 600], 0, [HWSURFACE, DOUBLEBUF]
       @factory = AdapterFactory.new
-      @world = World.new
+      @world = World.new(@screen)
       @paused = false
       @render_adapter = @factory.renderer_for :rubygame, @screen
       @app = App.new :renderer => @render_adapter
       @clock = Clock.new
+			@clock.enable_tick_events
       @clock.target_framerate = 30
       @clock.calibrate
       @pause_chkbx = CheckBox.new :x => 601, :y => 0, :w => 10, :h => 10, :label_text => "Pause"
@@ -25,7 +26,7 @@ module MASWithTwoNests
       @app.add @pause_chkbx, @home_chkbx, @exp_chkbx, @restart_btn
       @restart_btn.on :pressed do
         @app_adapter.draw @render_adapter
-        @world = World.new
+        @world = World.new(@screen)
       end
       @pause_chkbx.on :checked do
         @app_adapter.draw @render_adapter
@@ -47,9 +48,9 @@ module MASWithTwoNests
     def run
       loop do
         update
-        @app_adapter.update @clock.tick
-        @world.update(@clock) if not @paused
-        @world.draw(@screen) if not @paused
+				tick = @clock.tick
+        @app_adapter.update tick
+        @world.update(tick) if not @paused
         @screen.flip
       end
     end

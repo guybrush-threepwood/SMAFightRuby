@@ -38,7 +38,7 @@ module MASWithTwoNests
       super(arg)
     end
 
-    def update
+    def update(clock)
 
 
     end

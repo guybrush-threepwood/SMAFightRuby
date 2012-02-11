@@ -9,10 +9,12 @@ require 'resource'
 
 module MASWithTwoNests
   class World
+    attr_accessor :home_getting_bigger
+    attr_accessor :bot_start_from_home
+
     WIDTH = 600
     HEIGHT = 600
 
-    BOT_START_FROM_HOME = false
 		BOT_WITH_RESOURCE_SPEED_COEFF = 1
 		BOT_RADIUS = 2
 		BOT_PERCEPTION_RADIUS = 40
@@ -30,30 +32,28 @@ module MASWithTwoNests
 		RESOURCE_MOVE_SPEED = 110
 
 		HOME_RADIUS = 10
-		HOME_GETTING_BIGGER = true
 		RESOURCE_RANDOM_START_LIFE = true
 
-    def initialize(screen)
+    def initialize
+      @home_getting_bigger = true
+      @bot_start_from_home = false
+      @background = Rubygame::Surface.new([WIDTH, HEIGHT])
       @agents = Rubygame::Sprites::Group.new
       @agents << Resource.new(3)
-      @screen = screen
-      @agents.draw(@screen)
-      @screen.flip
     end
 
-    def update
-      @agents.update
+    def update(clock)
+      @agents.update(clock)
     end
 
-    def draw
-      @agents.draw(@screen)
-      @screen.flip
+    def draw(screen)
+      @background.blit(screen, [0, 0])
+      @agents.draw(screen)
     end
 
     def is_out?
-      #TODO
+
     end
 
-    #TODO
   end
 end

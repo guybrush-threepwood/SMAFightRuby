@@ -7,14 +7,15 @@ require 'resource'
 
 module MASWithTwoNests
   class Main
-    attr_reader :clock
     def initialize
-      @screen = Screen.new [800, 600]
+      @screen = Screen.new [800, 600], 0, [HWSURFACE, DOUBLEBUF]
       @factory = AdapterFactory.new
+      @world = World.new
+      @paused = false
       @render_adapter = @factory.renderer_for :rubygame, @screen
       @app = App.new :renderer => @render_adapter
       @clock = Clock.new
-      @clock.target_framerate = 20
+      @clock.target_framerate = 30
       @clock.calibrate
       @pause_chkbx = CheckBox.new :x => 601, :y => 0, :w => 10, :h => 10, :label_text => "Pause"
       @home_chkbx = CheckBox.new :x => 601, :y => 20, :w => 10, :h => 10, :label_text => "Start from home"
@@ -23,26 +24,38 @@ module MASWithTwoNests
       @restart_btn = Button.new "Restart", :x => 601, :y =>  80, :x_pad => 200, :y_pad => 10
       @app.add @pause_chkbx, @home_chkbx, @exp_chkbx, @restart_btn
       @restart_btn.on :pressed do
-        @world = World.new(@screen)
+        @app_adapter.draw @render_adapter
+        @world = World.new
+      end
+      @pause_chkbx.on :checked do
+        @app_adapter.draw @render_adapter
+        @paused = !@paused
+      end
+      @home_chkbx.on :checked do
+        @app_adapter.draw @render_adapter
+        @world.bot_start_from_home = !@world.bot_start_from_home
+      end
+      @exp_chkbx.on :checked do
+        @app_adapter.draw @render_adapter
+        @world.home_getting_bigger = !@world.home_getting_bigger
       end
       @app_adapter = @factory.app_for :rubygame, @app
       @queue = EventQueue.new
-      @world = World.new(@screen)
+      @app_adapter.draw @render_adapter
     end
 
     def run
       loop do
         update
         @app_adapter.update @clock.tick
-        @app_adapter.draw @render_adapter
-        @world.update
-        @world.draw
+        @world.update(@clock) if not @paused
+        @world.draw(@screen) if not @paused
+        @screen.flip
       end
     end
 
     def update
       @queue.each do |event|
-        # pass on our events to the GUI
         if event.class == QuitEvent
           throw :rubygame_quit
         end

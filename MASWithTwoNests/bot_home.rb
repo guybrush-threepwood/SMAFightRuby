@@ -19,7 +19,9 @@ module MASWithTwoNests
 			@image.draw_circle_s(@rect.center, Rubygame::Color::ColorRGB.new([0.1, 0.1, 0.1, 1]))
 		end
 
-
+		def add_resource
+			@resource_count += 1
+		end
 	end
 end
  

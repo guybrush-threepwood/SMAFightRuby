@@ -65,7 +65,7 @@ module MASWithTwoNests
 
 		def clean_dead_agents
 			@agents.each do |a|
-				@agents.kill(a) if a.dead
+				@agents.delete(a) if a.dead
 			end
 		end
 

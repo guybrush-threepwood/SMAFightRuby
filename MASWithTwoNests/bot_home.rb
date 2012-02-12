@@ -12,8 +12,6 @@ module MASWithTwoNests
 		attr_reader :resource_count
 		def initialize(world, team_id, color)
 			super(world)
-			Rubygame::TTF.setup
-			@ttf = Rubygame::TTF.new("/usr/share/fonts/TTF/Ubuntu-L.ttf", 9)
 			@resource_count = 0
 			@team_id = team_id
 			@color = color

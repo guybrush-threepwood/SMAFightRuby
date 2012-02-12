@@ -39,6 +39,7 @@ module MASWithTwoNests
 		RESOURCE_RANDOM_START_LIFE = true
 
     def initialize(screen)
+			Rubygame::TTF.setup
 			@screen = screen
       @home_getting_bigger = true
       @bot_start_from_home = false

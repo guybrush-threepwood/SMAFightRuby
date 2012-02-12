@@ -6,12 +6,15 @@ $LOAD_PATH << '../'
 require "lib/point"
 $LOAD_PATH << './'
 require 'resource'
+require 'bot_team'
 include Lib
 
 module MASWithTwoNests
   class World
     attr_accessor :home_getting_bigger
     attr_accessor :bot_start_from_home
+		attr_accessor :agents
+		attr_accessor :screen
 
     WIDTH = 600
     HEIGHT = 600
@@ -46,6 +49,7 @@ module MASWithTwoNests
       	resource = Resource.new(self, RESOURCE_START_LIFE, RESOURCE_MOVE_DELAY * Random.rand, RESOURCE_MOVE_SPEED * Random.rand)
 				resource.target_point = Point.new(Random.rand * WIDTH, Random.rand * HEIGHT)
 				@agents << resource
+				bot_team = BotTeam.new(self, "AntubisTeam", Rubygame::Color::ColorRGB.new([0.4,0.4,0.4]), ["truc"])
 			end
     end
 

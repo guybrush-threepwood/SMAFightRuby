@@ -9,14 +9,22 @@ require 'rubygame'
 module MASWithTwoNests
   class BotHome < Agent
 		attr_reader :team_id
+		attr_reader :resource_count
 		def initialize(world, team_id, color)
 			super(world)
+			Rubygame::TTF.setup
+			@ttf = Rubygame::TTF.new("/usr/share/fonts/TTF/Ubuntu-L.ttf", 9)
+			@resource_count = 0
 			@team_id = team_id
 			@color = color
-			@count_text = ""
 			@image = Rubygame::Surface.new([World::HOME_RADIUS * 2, World::HOME_RADIUS * 2])
 			@rect = @image.make_rect
-			@image.draw_circle_s(@rect.center, Rubygame::Color::ColorRGB.new([0.22745, 0.22745, 0.22745, 1]))
+			@rect.center[0] = Random.rand * World::WIDTH
+			@rect.center[1] = Random.rand * World::HEIGHT
+			@image.draw_circle_s(@rect.center, World::HOME_RADIUS, Rubygame::Color::ColorRGB.new([0.22745, 0.22745, 0.22745, 1]))
+		end
+
+		def update(tick, world)
 		end
 
 		def add_resource
@@ -24,4 +32,3 @@ module MASWithTwoNests
 		end
 	end
 end
- 

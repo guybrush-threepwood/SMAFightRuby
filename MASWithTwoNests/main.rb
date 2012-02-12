@@ -58,7 +58,8 @@ module MASWithTwoNests
     def update
       @queue.each do |event|
         if event.class == QuitEvent
-          throw :rubygame_quit
+					Rubygame.quit
+					exit
         end
         @app_adapter.on_event event
       end

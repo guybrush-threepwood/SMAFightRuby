@@ -70,9 +70,14 @@ module MASWithTwoNests
 		end
 
 		def check_collisions
-			#@agents.each do |i,j|
-				#TODO: dispatch event if collided
-			#end	
+			@agents.each do |i|
+				@agents.each do |j|
+					if i.collide(j)
+						i.on_collide(j) if i.respond_to?('on_collide')
+						next
+					end
+				end
+			end	
 		end
 
     def is_out?(target_point)

@@ -38,13 +38,13 @@ module MASWithTwoNests
 			@dead = true if @life <= 0
 
 			@update_time += tick.milliseconds
-			if @update_time > @move_delay || world.is_out?(@target_point)
+			if @update_time > @move_delay or world.is_out?(@target_point)
 				change_direction
 				@update_time = 0
 			end
 			
-			@target_point.x = @target_point.x + @direction.x * @speed * tick.seconds
-			@target_point.y = @target_point.y + @direction.y * @speed * tick.seconds
+			@target_point.x += @direction.x * @speed * tick.seconds
+			@target_point.y += @direction.y * @speed * tick.seconds
 
 			move
 		end

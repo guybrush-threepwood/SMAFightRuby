@@ -7,7 +7,7 @@ module Lib
       @y = y
     end
 
-    def Point.distance(point, other_point)
+    def self.distance(point, other_point)
       a = (point.x - other_point.x).abs
       b = (point.y - other_point.y).abs
       Math.sqrt(a * a + b * b).floor

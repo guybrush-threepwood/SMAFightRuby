@@ -26,8 +26,8 @@ module MASWithTwoNests
 
     def change_direction
       @direction = Point.new(Random.rand, Random.rand)
-      @direction.x = @direction.x * - 1 if Random.rand > 0.5
-      @direction.y = @direction.y * - 1 if Random.rand > 0.5
+      @direction.x = @direction.x.to_i - 1 if Random.rand > 0.5
+      @direction.y = @direction.y.to_i - 1 if Random.rand > 0.5
       @direction.normalize!
     end
   end

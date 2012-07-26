@@ -50,8 +50,8 @@ module MASWithTwoNests
       	resource = Resource.new(self, RESOURCE_START_LIFE, RESOURCE_MOVE_DELAY * Random.rand, RESOURCE_MOVE_SPEED * Random.rand)
 				resource.target_point = Point.new(Random.rand * WIDTH, Random.rand * HEIGHT)
 				@agents << resource
-				bot_team = BotTeam.new(self, "AntubisTeam", Rubygame::Color::ColorRGB.new([0.4,0.4,0.4]), ["truc"])
 			end
+			bot_team = BotTeam.new(self, "AntubisTeam", Rubygame::Color::ColorRGB.new([0.4,0.4,0.4]), ["truc"])
     end
 
     def update(tick)

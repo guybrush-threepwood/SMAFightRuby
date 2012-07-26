@@ -17,6 +17,10 @@ module Lib
       Point.distance(self, Point.new(0, 0))
     end
 
+		def ==(other)
+			@x.to_i == other.x.to_i and @y.to_i == other.y.to_i
+	  end
+
     def normalize!(length_scale = 1)
       @x = length_scale if @x > length_scale
       @y = length_scale if @y > length_scale

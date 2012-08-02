@@ -23,7 +23,6 @@ module MASWithTwoNests
 			@rect = @image.make_rect
 			@direction_change_delay = direction_change_delay
 			@image.draw_circle_s(@rect.center, radius * 2, color)
-			@target_point = Point.new(Random.rand * World::WIDTH, Random.rand * World::HEIGHT)
 
 			@direction = nil
 			@radius = radius

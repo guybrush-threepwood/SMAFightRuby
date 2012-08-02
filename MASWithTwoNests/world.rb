@@ -27,7 +27,6 @@ module MASWithTwoNests
 		BOT_INIT_POSITION = Point.new(WIDTH / 2, HEIGHT / 2)
 		BOT_SPEED = 100
 		BOT_DIRECTION_CHANGE_DELAY = 500
-		BOT_START_FROM_HOME = false
 
 		RESOURCE_LIFE_RADIUS_COEFF = 10
 		RESOURCE_START_LIFE = 3
@@ -40,11 +39,11 @@ module MASWithTwoNests
 		HOME_RADIUS = 10
 		RESOURCE_RANDOM_START_LIFE = true
 
-    def initialize(screen)
+    def initialize(screen, bot_start_from_home = false, home_getting_bigger = true)
 			Rubygame::TTF.setup
 			@screen = screen
-      @home_getting_bigger = true
-      @bot_start_from_home = false
+      @home_getting_bigger = home_getting_bigger
+      @bot_start_from_home = bot_start_from_home
       @background = Rubygame::Surface.new([WIDTH, HEIGHT])
       @agents = Rubygame::Sprites::Group.new
 			Rubygame::Sprites::UpdateGroup.extend_object @agents

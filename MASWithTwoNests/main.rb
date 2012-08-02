@@ -21,12 +21,13 @@ module MASWithTwoNests
       @pause_chkbx = CheckBox.new :x => 601, :y => 0, :w => 10, :h => 10, :label_text => "Pause"
       @home_chkbx = CheckBox.new :x => 601, :y => 20, :w => 10, :h => 10, :label_text => "Start from home"
       @exp_chkbx = CheckBox.new :x => 601, :y =>  40, :w => 10, :h => 10, :label_text => "Home expansion"
-      @exp_chkbx.checked = true
+      @exp_chkbx.checked = @world.home_getting_bigger
+			@home_chkbx.checked = @world.bot_start_from_home
       @restart_btn = Button.new "Restart", :x => 601, :y =>  80, :x_pad => 200, :y_pad => 10
       @app.add @pause_chkbx, @home_chkbx, @exp_chkbx, @restart_btn
       @restart_btn.on :pressed do
         @app_adapter.draw @render_adapter
-        @world = World.new(@screen)
+        @world = World.new(@screen, @world.bot_start_from_home, @world.home_getting_bigger)
       end
       @pause_chkbx.on :checked do
         @app_adapter.draw @render_adapter

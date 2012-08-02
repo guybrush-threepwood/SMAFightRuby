@@ -28,9 +28,9 @@ module MASWithTwoNests
 				bot_class = bot_type.type
 
 				bot_type_count.times do
-          bot = bot_class.new(world, team_id, color, World::BOT_RADIUS, World::BOT_SPEED, World::BOT_DIRECTION_CHANGE_DELAY, World::BOT_PERCEPTION_RADIUS)
+          bot = bot_class.new(world, team_id, Rubygame::Color::ColorRGB.new(team_color), World::BOT_RADIUS, World::BOT_SPEED, World::BOT_DIRECTION_CHANGE_DELAY, World::BOT_PERCEPTION_RADIUS)
 
-					if World::BOT_START_FROM_HOME
+					if world.bot_start_from_home
 				    bot.current_point = team_home.current_point
 					else
 						bot.current_point = Point.new(Random.rand * World::WIDTH, Random.rand * World::HEIGHT)

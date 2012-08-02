@@ -1,3 +1,4 @@
+$LOAD_PATH << '../ExpertSystem/'
 require 'fact_base'
 require 'rule_base'
 require 'rule'

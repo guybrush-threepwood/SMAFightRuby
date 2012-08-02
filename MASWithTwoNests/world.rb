@@ -7,6 +7,7 @@ require "lib/point"
 $LOAD_PATH << './'
 require 'resource'
 require 'bot_team'
+require 'agent_type'
 include Lib
 
 module MASWithTwoNests
@@ -26,6 +27,7 @@ module MASWithTwoNests
 		BOT_INIT_POSITION = Point.new(WIDTH / 2, HEIGHT / 2)
 		BOT_SPEED = 100
 		BOT_DIRECTION_CHANGE_DELAY = 500
+		BOT_START_FROM_HOME = false
 
 		RESOURCE_LIFE_RADIUS_COEFF = 10
 		RESOURCE_START_LIFE = 3
@@ -51,7 +53,7 @@ module MASWithTwoNests
 				resource.target_point = Point.new(Random.rand * WIDTH, Random.rand * HEIGHT)
 				@agents << resource
 			end
-			bot_team = BotTeam.new(self, "AntubisTeam", Rubygame::Color::ColorRGB.new([0.4,0.4,0.4]), ["truc"])
+			bot_team = BotTeam.new(self, "DefaultTeam", Rubygame::Color::ColorRGB.new([0.4, 0.4, 0.4]), [AgentType::AGENT_BOT], BOT_COUNT/2)
     end
 
     def update(tick)

@@ -24,6 +24,7 @@ module MASWithTwoNests
       @image.set_colorkey([0, 0, 0])
 			@image.draw_circle_s(@rect.center, (World::RESOURCE_LIFE_RADIUS_COEFF * @life), Rubygame::Color::ColorRGB.new([0.8, 0.8 , 0.8, 1])) if @life > 0
 			@rect.center = [Random.rand * World::HEIGHT, Random.rand * World::HEIGHT]
+			change_direction
     end
 
     def decrease_life

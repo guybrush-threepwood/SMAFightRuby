@@ -18,7 +18,7 @@ module MASWithTwoNests
 
 			team_color = @color.to_rgba_ary
 			2.times do |i|
-				team_color[i] += 0.13333333
+				team_color[i] += 0.77333333
 			end
 			team_home = BotHome.new(@world, @team_id, Rubygame::Color::ColorRGB.new(team_color))
 			@world.agents << team_home

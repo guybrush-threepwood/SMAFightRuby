@@ -17,7 +17,7 @@ module MASWithTwoNests
     end
 		
 		def move
-			@rect.center = [@target_point.x, @target_point.y] unless @world.is_out?(@target_point)
+			self.current_point = @target_point unless @world.is_out?(@target_point)
 		end
 
     def current_point
@@ -25,8 +25,7 @@ module MASWithTwoNests
     end
 
 		def current_point=(point)
-			@rect.center[0] = point.x.to_i
-			@rect.center[1] = point.y.to_i
+			@rect.center = [point.x, point.y]
 		end
 
     def change_direction

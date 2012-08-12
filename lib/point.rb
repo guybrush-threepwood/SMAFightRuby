@@ -18,6 +18,7 @@ module Lib
     end
 
 		def ==(other)
+			return false if other == nil
 			@x.to_i == other.x.to_i and @y.to_i == other.y.to_i
 	  end
 

@@ -1,10 +1,12 @@
 $LOAD_PATH << '../'
 require 'lib/point'
 include Lib
-require 'ExpertSystem/expert_system.rb'
+require 'ExpertSystem/expert_system'
+require 'ExpertSystem/rule'
 include ExpertSystem
 $LOAD_PATH << './'
 require 'agent'
+require 'agent_facts'
 require 'resource'
 require 'world'
 require 'rubygame'
@@ -18,11 +20,7 @@ module MASWithTwoNests
 			super(world)
 			@team_id = team_id
 			@speed = speed
-			@image = Rubygame::Surface.new([ perception_radius, perception_radius ])
-      @image.set_colorkey([0, 0, 0])
-			@rect = @image.make_rect
 			@direction_change_delay = direction_change_delay
-			@image.draw_circle_s(@rect.center, radius * 2, color)
 
 			@direction = nil
 			@radius = radius
@@ -41,18 +39,53 @@ module MASWithTwoNests
 			@home = nil
 			@home_position = nil
 
+			resource_color_ary = @color.to_rgba_ary
+			3.times do |i|
+				resource_color_ary[i] += 0x55 #0X228822
+			end
+			@resource_color = Rubygame::Color::ColorRGB.new([resource_color_ary[0], resource_color_ary[1], resource_color_ary[2]])
+
       init_expert_system
+			init_sprite
+			draw_sprite
 			change_direction
 		end
 
+		def init_sprite
+			@image = Rubygame::Surface.new([ @radius, @radius ])
+      @image.set_colorkey([0, 0, 0])
+			@rect = @image.make_rect
+		end
+
+		def draw_sprite
+			if (@has_resource)
+			  @image.draw_circle_s(@rect.center, @radius, @resource_color)
+			else
+			  @image.draw_circle_s(@rect.center, @radius, @color)
+			end
+		end
+
 		def update(tick, world)
+			draw_sprite
+			update_facts
+			infer
+			act
 			move
+
+			@reached_resource = nil
+			@home = nil
 		end
 
 		def init_expert_system
-			expert_system = ExpertSystem::ExpertSystem.new()
+			@expert_system = ExpertSystem::ExpertSystem.new()
 
+      @expert_system.add_rule(Rule.new(AgentFacts::GO_TO_RESOURCE,[ AgentFacts::NO_RESOURCE,
+			                                                             	AgentFacts::SEE_RESOURCE,
+			                                                             	AgentFacts::CHANGE_DIRECTION_TIME]))
+		end
 
+		def infer
+			@expert_system.infer
 		end
 
 		def update_facts
@@ -61,12 +94,38 @@ module MASWithTwoNests
 		def act
 		end
 
+		def is_collided?(agent)
+			collide_sprite?(agent)
+		end
+
+		def is_perceived?(agent)
+			return (Point.distance(agent.current_point, current_point) <= @perception_radius)
+		end
+
 		def on_collide(agent)
-			if collide_sprite? agent
+      if is_collided? agent
 				if agent.class == Resource
 					@reached_resource = agent
 				end
+			else
+				if agent.class == Resource
+					#The last reached resource can't be seen
+					if agent != @last_reached_resource or @last_reached_resource == nil
+						@seen_resource = agent
+					end
+				end
 			end
+
+      if agent.class == BotHome and agent.team_id == @team_id
+				@home = agent
+				if @home_position == nil
+					@home_position = agent.current_point
+				end
+			end
+		end
+
+		def infer
+      @expert_system.infer
 		end
 	end
 end

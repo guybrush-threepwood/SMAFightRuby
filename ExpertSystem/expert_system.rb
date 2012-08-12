@@ -56,6 +56,7 @@ module ExpertSystem
       @rule_base.rules.each do |r|
         return r if is_rule_valid(r)
       end
+			return nil
     end
 
     def clear_inferred_facts
@@ -67,8 +68,10 @@ module ExpertSystem
 
       begin
         valid_rule = get_valid_rule
-        set_fact_value(valid_rule.goal, true)
-        @inferred_facts << valid_rule.goal
+				if valid_rule
+					set_fact_value(valid_rule.goal, true)
+					@inferred_facts << valid_rule.goal
+				end
       end while valid_rule != nil
     end
   end

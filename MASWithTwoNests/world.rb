@@ -74,7 +74,7 @@ module MASWithTwoNests
 			@agents.each do |i|
 				@agents.each do |j|
 					if i.collide(j)
-						i.on_collide(j) if i.respond_to?('on_collide')
+						i.on_collide(j) if i.respond_to?('on_collide') and (i.is_collided?(j) or i.is_perceived?(j))
 						next
 					end
 				end

@@ -22,4 +22,6 @@ module CustomTeam
 		def on_collide(agent)
 			super
 		end
+	end
 end
+

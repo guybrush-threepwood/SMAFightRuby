@@ -1,3 +1,4 @@
+require 'rubygems'
 require 'rubygoo'
 require 'rubygame'
 include Rubygame

@@ -1,3 +1,4 @@
+require 'rubygems'
 require 'rubygame'
 $LOAD_PATH << '../'
 require 'lib/point'

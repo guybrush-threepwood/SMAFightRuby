@@ -1,3 +1,4 @@
+require 'rubygems'
 $LOAD_PATH << '../'
 require 'lib/point'
 include Lib

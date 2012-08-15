@@ -67,7 +67,6 @@ module MASWithTwoNests
 		end
 
 		def update(tick, world)
-			draw_sprite
 			update_facts
 			infer
 			act

@@ -50,8 +50,8 @@ module MASWithTwoNests
 			@bot_teams = []
 			Rubygame::Sprites::UpdateGroup.extend_object @agents
 			RESOURCE_COUNT.times do
-      	resource = Resource.new(self, RESOURCE_START_LIFE, RESOURCE_MOVE_DELAY * Random.rand, RESOURCE_MOVE_SPEED * Random.rand)
-				resource.target_point = Point.new(Random.rand * WIDTH, Random.rand * HEIGHT)
+				resource = Resource.new(self, RESOURCE_START_LIFE, RESOURCE_MOVE_DELAY * rand, RESOURCE_MOVE_SPEED * rand)
+				resource.target_point = Point.new(rand * WIDTH, rand * HEIGHT)
 				@agents << resource
 			end
 			bot_team = BotTeam.new(self, "DefaultTeam", Rubygame::Color::ColorRGB.new([0.4, 0.4, 0.4]), [AgentType::AGENT_BOT], BOT_COUNT/2)

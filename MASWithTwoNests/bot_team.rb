@@ -36,7 +36,7 @@ module MASWithTwoNests
 					if world.bot_start_from_home
 				    bot.current_point = team_home.current_point
 					else
-						bot.current_point = Point.new(Random.rand * World::WIDTH, Random.rand * World::HEIGHT)
+						bot.current_point = Point.new(rand * World::WIDTH, rand * World::HEIGHT)
 					end
 					@world.agents << bot
 					@bots << bot

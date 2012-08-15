@@ -20,7 +20,7 @@ module MASWithTwoNests
 			@rect = @image.make_rect
       @image.set_colorkey([0, 0, 0])
 			@image.draw_circle_s(@rect.center, World::HOME_RADIUS, Rubygame::Color::ColorRGB.new([0.22745, 0.22745, 0.22745, 1]))
-			@rect.center = [Random.rand * World::HEIGHT, Random.rand * World::HEIGHT]
+			@rect.center = [rand * World::HEIGHT, rand * World::HEIGHT]
 		end
 
 		def update(tick, world)

@@ -16,7 +16,7 @@ module MASWithTwoNests
       @update_time = 0
       @speed = speed
       if World::RESOURCE_RANDOM_START_LIFE
-        @life = life * Random.rand + World::RESOURCE_UPDATE_VALUE
+        @life = life * rand + World::RESOURCE_UPDATE_VALUE
       else
         @life = life
       end
@@ -24,7 +24,7 @@ module MASWithTwoNests
       @rect = @image.make_rect
       @image.set_colorkey([0, 0, 0])
 			@image.draw_circle_s(@rect.center, (World::RESOURCE_LIFE_RADIUS_COEFF * @life), Rubygame::Color::ColorRGB.new([0.8, 0.8 , 0.8, 1])) if @life > 0
-			@rect.center = [Random.rand * World::HEIGHT, Random.rand * World::HEIGHT]
+			@rect.center = [rand * World::HEIGHT, rand * World::HEIGHT]
 			change_direction
     end
 

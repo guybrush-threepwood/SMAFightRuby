@@ -67,7 +67,7 @@ module MASWithTwoNests
 		end
 
 		def update(tick, world)
-			update_facts
+			update_facts(tick)
 			infer
 			act
 			move
@@ -88,10 +88,33 @@ module MASWithTwoNests
 			@expert_system.infer
 		end
 
-		def update_facts
+		def update_facts(tick)
+			if @has_resource
+			else
+				@expert_system.set_fact_value(AgentFacts::NO_RESOURCE, true)
+			end
+
+			@update_time += tick.milliseconds
+			if @update_time > @direction_change_delay
+				@expert_system.set_fact_value(AgentFacts::CHANGE_DIRECTION_TIME, true)
+				@update_time = 0
+			end
+
+			if @seen_resource
+				@expert_system.set_fact_value(AgentFacts::SEE_RESOURCE, true)
+			end
+		end
+
+		def go_to_resource
+			@direction = @seen_resource.current_point - @target_point
+			@direction.normalize!
+			@seen_resource = nil
 		end
 
 		def act
+			@expert_system.inferred_facts.each do |fact|
+				puts fact.to_sym.to_s
+			end
 		end
 
 		def is_collided?(agent)

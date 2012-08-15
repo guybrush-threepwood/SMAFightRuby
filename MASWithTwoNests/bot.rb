@@ -102,17 +102,17 @@ module MASWithTwoNests
 			return (Point.distance(agent.current_point, current_point) <= @perception_radius)
 		end
 
-		def on_collide(agent)
-      if is_collided? agent
-				if agent.class == Resource
-					@reached_resource = agent
-				end
-			else
-				if agent.class == Resource
-					#The last reached resource can't be seen
-					if agent != @last_reached_resource or @last_reached_resource == nil
-						@seen_resource = agent
-					end
+		def on_collision(agent)
+			if agent.class == Resource
+				@reached_resource = agent
+			end
+			return agent
+		end
+
+		def on_perception(agent)
+			if agent.class == Resource
+				if agent != @last_reached_resource or @last_reached_resource == nil
+					@seen_resource = agent
 				end
 			end
 
@@ -122,6 +122,7 @@ module MASWithTwoNests
 					@home_position = agent.current_point
 				end
 			end
+			return agent
 		end
 
 		def infer

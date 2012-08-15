@@ -74,14 +74,17 @@ module MASWithTwoNests
 		end
 
 		def check_collisions
+			notified_bots = []
 			@bot_teams.each do |bot_team|
-				others = @agents - bot_team.bots
-				bot_team.bots.each do |bot|
-					others.each do |agent|
-					  if bot.collide(agent)
-						  bot.on_collide(agent) if (bot.is_collided?(agent) or bot.is_perceived?(agent))
+				others = (@agents - bot_team.bots) - notified_bots
+				if others.any?
+					bot_team.bots.each do |bot|
+						others.each do |agent|
+							notify_bot(bot, agent, notified_bots)
 						end
 					end
+				else
+					break
 				end
 			end	
 		end
@@ -89,5 +92,21 @@ module MASWithTwoNests
     def is_out?(target_point)
 			return true if (( target_point.x <= 0 || target_point.x >= WIDTH) || target_point.y <= 0 || target_point.y >= HEIGHT)
     end
+
+		private
+
+		def notify_bot(bot, agent, notified_bots, bot_check = true)
+			notified = nil
+			if bot.is_collided?(agent)
+				notified = bot.on_collision(agent)
+			end
+			if bot.is_perceived?(agent)
+				notified = bot.on_perception(agent)
+			end
+			notified_bots << bot if notified
+			if bot_check and agent.class.ancestors.include?(Bot)
+				notify_bot(agent, bot, false)
+			end
+		end
   end
 end

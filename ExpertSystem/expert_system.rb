@@ -16,22 +16,19 @@ module ExpertSystem
     end
 
     def add_fact(fact)
-      @fact_base.facts_values.store(fact, false)
+      @fact_base.facts_values.store(fact.to_sym, false)
     end
 
     def set_fact_value(fact, value)
-      @fact_base.facts_values[fact] = value if @fact_base.has_fact(fact)
+      @fact_base.facts_values[fact.to_sym] = value if @fact_base.has_fact(fact)
     end
 
     def get_fact_value(fact)
-      return @fact_base.facts_values[fact] if @fact_base.has_fact(fact)
-      return false
+      return @fact_base.facts_values[fact.to_sym] if @fact_base.has_fact(fact)
     end
 
     def reset_facts
-      @fact_base.facts_values.each do |k,v|
-        k[v] = false
-      end
+      @fact_base.facts_values.clear
     end
 
     def add_rule(rule)
@@ -54,8 +51,8 @@ module ExpertSystem
 
     def get_valid_rule
       @rule_base.rules.each do |r|
-        return r if is_rule_valid(r)
-      end
+				return r if is_rule_valid(r)
+			end
 			return nil
     end
 

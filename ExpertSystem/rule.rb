@@ -6,5 +6,9 @@ module ExpertSystem
       @goal = goal
       @premises = premises
     end
+
+		def to_sym
+			@goal.label.to_sym
+		end
   end
 end

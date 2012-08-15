@@ -8,5 +8,9 @@ module ExpertSystem
     def ==(fact)
       fact.label == @label
     end
+
+		def to_sym
+			@label.to_sym
+		end
   end
 end

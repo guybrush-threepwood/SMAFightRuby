@@ -6,10 +6,7 @@ module ExpertSystem
     end
 
     def has_fact(fact)
-      @facts_values.each do |f|
-        return true if f == fact
-      end
-      return false
+      @facts_values[fact.to_sym]
     end
   end
 end

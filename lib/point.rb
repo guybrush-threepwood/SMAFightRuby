@@ -22,6 +22,11 @@ module Lib
 			@x.to_i == other.x.to_i and @y.to_i == other.y.to_i
 	  end
 
+		def -(other)
+			@x -= other.x
+			@y -= other.y
+		end
+
     def normalize!(length_scale = 1)
       @x = length_scale if @x > length_scale
       @y = length_scale if @y > length_scale

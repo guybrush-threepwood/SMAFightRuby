@@ -11,7 +11,9 @@ require 'bot_home'
 module MASWithTwoNests
 	class BotTeam < Agent
 		attr_reader :team_id
+		attr_reader :bots
 		def initialize(world, team_id, color, bot_types, bot_count)
+			@bots = []
 			@world = world
 			@team_id = team_id
 			@color = color
@@ -37,6 +39,7 @@ module MASWithTwoNests
 						bot.current_point = Point.new(Random.rand * World::WIDTH, Random.rand * World::HEIGHT)
 					end
 					@world.agents << bot
+					@bots << bot
 				end
 			end
 		end

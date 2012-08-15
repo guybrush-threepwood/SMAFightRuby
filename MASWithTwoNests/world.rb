@@ -47,6 +47,7 @@ module MASWithTwoNests
       @bot_start_from_home = bot_start_from_home
       @background = Rubygame::Surface.new([WIDTH, HEIGHT])
       @agents = Rubygame::Sprites::Group.new
+			@bot_teams = []
 			Rubygame::Sprites::UpdateGroup.extend_object @agents
 			RESOURCE_COUNT.times do
       	resource = Resource.new(self, RESOURCE_START_LIFE, RESOURCE_MOVE_DELAY * Random.rand, RESOURCE_MOVE_SPEED * Random.rand)
@@ -54,6 +55,7 @@ module MASWithTwoNests
 				@agents << resource
 			end
 			bot_team = BotTeam.new(self, "DefaultTeam", Rubygame::Color::ColorRGB.new([0.4, 0.4, 0.4]), [AgentType::AGENT_BOT], BOT_COUNT/2)
+			@bot_teams << bot_team
     end
 
     def update(tick)
@@ -72,11 +74,13 @@ module MASWithTwoNests
 		end
 
 		def check_collisions
-			@agents.each do |i|
-				@agents.each do |j|
-					if i.collide(j)
-						i.on_collide(j) if i.respond_to?('on_collide') and (i.is_collided?(j) or i.is_perceived?(j))
-						next
+			@bot_teams.each do |bot_team|
+				others = @agents - bot_team.bots
+				bot_team.bots.each do |bot|
+					others.each do |agent|
+					  if bot.collide(agent)
+						  bot.on_collide(agent) if (bot.is_collided?(agent) or bot.is_perceived?(agent))
+						end
 					end
 				end
 			end	

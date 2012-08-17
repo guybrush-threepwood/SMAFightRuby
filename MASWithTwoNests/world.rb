@@ -48,10 +48,12 @@ module MASWithTwoNests
       @background = Rubygame::Surface.new([WIDTH, HEIGHT])
       @agents = Rubygame::Sprites::Group.new
 			@bot_teams = []
+			@resources = []
 			Rubygame::Sprites::UpdateGroup.extend_object @agents
 			RESOURCE_COUNT.times do
 				resource = Resource.new(self, RESOURCE_START_LIFE, RESOURCE_MOVE_DELAY * rand, RESOURCE_MOVE_SPEED * rand)
 				resource.target_point = Point.new(rand * WIDTH, rand * HEIGHT)
+				@resources << resource
 				@agents << resource
 			end
 			bot_team = BotTeam.new(self, "DefaultTeam", Rubygame::Color::ColorRGB.new([0.4, 0.4, 0.4]), [AgentType::AGENT_BOT], BOT_COUNT/2)
@@ -63,13 +65,22 @@ module MASWithTwoNests
 			@agents.undraw @screen, @background
       @agents.update(tick, self)
 			@agents.draw @screen
-			clean_dead_agents
+			clean_dead_resources
 			check_collisions
     end
 
-		def clean_dead_agents
-			@agents.each do |a|
-				@agents.delete(a) if a.dead
+    def is_out?(target_point)
+			return true if (( target_point.x <= 0 || target_point.x >= WIDTH) || target_point.y <= 0 || target_point.y >= HEIGHT)
+    end
+
+		private
+
+		def clean_dead_resources
+			@resources.each do |r|
+				if r.dead
+					@agents.delete(r)
+					@resources.delete(r)
+				end
 			end
 		end
 
@@ -88,12 +99,6 @@ module MASWithTwoNests
 				end
 			end	
 		end
-
-    def is_out?(target_point)
-			return true if (( target_point.x <= 0 || target_point.x >= WIDTH) || target_point.y <= 0 || target_point.y >= HEIGHT)
-    end
-
-		private
 
 		def notify_bot(bot, agent, notified_bots, bot_check = true)
 			notified = nil

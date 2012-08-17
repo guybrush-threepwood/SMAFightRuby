@@ -45,6 +45,7 @@ module MASWithTwoNests
 				resource_color_ary[i] += 0x55 #0X228822
 			end
 			@resource_color = Rubygame::Color::ColorRGB.new([resource_color_ary[0], resource_color_ary[1], resource_color_ary[2]])
+			@current_color = nil
 
       init_expert_system
 			init_sprite
@@ -53,16 +54,22 @@ module MASWithTwoNests
 		end
 
 		def init_sprite
-			@image = Rubygame::Surface.new([ @radius, @radius ])
+			@image = Rubygame::Surface.new([@radius, @radius])
       @image.set_colorkey([0, 0, 0])
 			@rect = @image.make_rect
 		end
 
 		def draw_sprite
-			if (@has_resource)
-			  @image.draw_circle_s(@rect.center, @radius, @resource_color)
+			if @has_resource
+				if @current_color != @resource_color
+			    @image.draw_circle_s(@rect.center, @radius, @resource_color)
+					@current_color = @resource_color
+				end
 			else
-			  @image.draw_circle_s(@rect.center, @radius, @color)
+				if @current_color != @color
+			    @image.draw_circle_s(@rect.center, @radius, @color)
+					@curent_color = @color
+				end
 			end
 		end
 
@@ -70,6 +77,7 @@ module MASWithTwoNests
 			update_facts(tick)
 			infer
 			act
+			draw_sprite
 			move
 
 			@reached_resource = nil
@@ -77,7 +85,7 @@ module MASWithTwoNests
 		end
 
 		def init_expert_system
-			@expert_system = ExpertSystem::ExpertSystem.new()
+			@expert_system = ExpertSystem::ExpertSystem.new
 
       @expert_system.add_rule(Rule.new(AgentFacts::GO_TO_RESOURCE,[ AgentFacts::NO_RESOURCE,
 			                                                             	AgentFacts::SEE_RESOURCE,

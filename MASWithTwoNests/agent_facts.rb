@@ -16,9 +16,10 @@ module MASWithTwoNests
     NOT_SEEING_HOME       = Fact.new("Not seeing home")
     GO_HOME               = Fact.new("Go home")
     AT_HOME               = Fact.new("At home")
-    CHANGE_DIRECTION      = Fact.new("Changing direction")
-    GO_TO_RESOURCE        = Fact.new("Going to resource")
-    TAKE_RESOURCE         = Fact.new("Taking Resource.")
-    PUT_DOWN_RESOURCE     = Fact.new("Putting down Resource.")
+
+    CHANGE_DIRECTION      = Fact.new("Changing direction", :change_direction)
+    GO_TO_RESOURCE        = Fact.new("Going to resource", :go_to_resource)
+    TAKE_RESOURCE         = Fact.new("Taking Resource.", :take_resource)
+    PUT_DOWN_RESOURCE     = Fact.new("Putting down Resource.", :put_down_resource)
   end
 end

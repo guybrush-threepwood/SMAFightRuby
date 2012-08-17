@@ -1,8 +1,10 @@
 module ExpertSystem
   class Fact
     attr_reader :label
-    def initialize(label)
+		attr_reader :action
+    def initialize(label, action = nil)
       @label = label
+			@action = action
     end
 
     def ==(fact)

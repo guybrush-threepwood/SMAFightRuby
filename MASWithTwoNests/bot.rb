@@ -106,14 +106,16 @@ module MASWithTwoNests
 		end
 
 		def go_to_resource
-			@direction = @seen_resource.current_point - @target_point
-			@direction.normalize!
-			@seen_resource = nil
+			if @seen_resource
+				@direction = @seen_resource.current_point - @target_point
+				@direction.normalize!
+				@seen_resource = nil
+			end
 		end
 
 		def act
 			@expert_system.inferred_facts.each do |fact|
-				puts fact.to_sym.to_s
+				self.send(fact.action) if fact.action
 			end
 		end
 

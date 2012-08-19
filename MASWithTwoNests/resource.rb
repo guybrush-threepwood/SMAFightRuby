@@ -23,17 +23,23 @@ module MASWithTwoNests
       @image = Rubygame::Surface.new([World::RESOURCE_LIFE_RADIUS_COEFF * @life * 2, World::RESOURCE_LIFE_RADIUS_COEFF * @life * 2])
       @rect = @image.make_rect
       @image.set_colorkey([0, 0, 0])
-			@image.draw_circle_s(@rect.center, (World::RESOURCE_LIFE_RADIUS_COEFF * @life), Rubygame::Color::ColorRGB.new([0.8, 0.8 , 0.8, 1])) if @life > 0
+			draw_sprite
 			@rect.center = [rand * World::HEIGHT, rand * World::HEIGHT]
 			change_direction
     end
 
+		def draw_sprite
+			@image.draw_circle_s(@rect.center, (World::RESOURCE_LIFE_RADIUS_COEFF * @life), Rubygame::Color::ColorRGB.new([0.8, 0.8 , 0.8, 1])) if @life > 0
+		end
+
     def decrease_life
       @life = @life - World::RESOURCE_UPDATE_VALUE
+			draw_sprite
     end
 
     def increase_life
       @life = @life + World::RESOURCE_UPDATE_VALUE
+			draw_sprite
     end
 
     def update(tick, world)

@@ -38,7 +38,10 @@ module MASWithTwoNests
 
     def update(tick, world)
 			@dead = true if @life <= 0
+			move(tick, world)
+		end
 
+		def move(tick, world)
 			@update_time += tick.milliseconds
 			if @update_time > @move_delay or world.is_out?(@target_point)
 				change_direction
@@ -48,7 +51,7 @@ module MASWithTwoNests
 			@target_point.x += @direction.x * @speed * tick.seconds
 			@target_point.y += @direction.y * @speed * tick.seconds
 
-			move
+			self.current_point = @target_point unless @world.is_out?(@target_point)
 		end
   end
 end

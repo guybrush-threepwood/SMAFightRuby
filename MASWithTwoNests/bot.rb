@@ -78,7 +78,7 @@ module MASWithTwoNests
 			infer
 			act
 			draw_sprite
-			move
+			move(tick)
 
 			@reached_resource = nil
 			@home = nil
@@ -125,6 +125,17 @@ module MASWithTwoNests
 			@expert_system.inferred_facts.each do |fact|
 				self.send(fact.action) if fact.action
 			end
+		end
+
+		def move(tick)
+			real_speed = @speed
+			if(@has_resource)
+				real_speed *= World::BOT_WITH_RESOURCE_SPEED_COEFF
+			end
+
+			@target_point.x = current_point.x + @direction.x * real_speed * tick.seconds
+			@target_point.y = current_point.y + @direction.y * real_speed * tick.seconds
+			self.current_point = @target_point unless @world.is_out?(@target_point)
 		end
 
 		def is_collided?(agent)

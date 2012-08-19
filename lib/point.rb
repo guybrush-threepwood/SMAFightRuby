@@ -25,6 +25,7 @@ module Lib
 		def -(other)
 			@x -= other.x
 			@y -= other.y
+			return self
 		end
 
     def normalize!(length_scale = 1)

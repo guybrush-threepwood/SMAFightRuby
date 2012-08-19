@@ -90,6 +90,36 @@ module MASWithTwoNests
       @expert_system.add_rule(Rule.new(AgentFacts::GO_TO_RESOURCE,[ AgentFacts::NO_RESOURCE,
 			                                                             	AgentFacts::SEE_RESOURCE,
 			                                                             	AgentFacts::CHANGE_DIRECTION_TIME]))
+
+			@expert_system.add_rule(Rule.new(AgentFacts::TAKE_RESOURCE,[ 	AgentFacts::NO_RESOURCE,
+																																		AgentFacts::REACHED_RESOURCE]))
+
+			@expert_system.add_rule(Rule.new(AgentFacts::GO_HOME, [	AgentFacts::GOT_RESOURCE,
+																															AgentFacts::SEEING_HOME]))
+
+			@expert_system.add_rule(Rule.new(AgentFacts::GO_TO_RESOURCE,[	AgentFacts::GOT_RESOURCE,
+																																		AgentFacts::SEE_RESOURCE,
+																																		AgentFacts::BIGGER_RESOURCE,
+																																		AgentFacts::NOT_SEEING_HOME,
+																																		AgentFacts::CHANGE_DIRECTION_TIME]))
+
+			@expert_system.add_rule(Rule.new(AgentFacts::CHANGE_DIRECTION,[ AgentFacts::GOT_RESOURCE,
+																																			AgentFacts::SEE_RESOURCE,
+																																			AgentFacts::SMALLER_RESOURCE,
+																																			AgentFacts::CHANGE_DIRECTION_TIME]))
+
+			@expert_system.add_rule(Rule.new(AgentFacts::PUT_DOWN_RESOURCE,[	AgentFacts::GOT_RESOURCE,
+																																				AgentFacts::REACHED_RESOURCE]))
+
+			@expert_system.add_rule(Rule.new(AgentFacts::PUT_DOWN_RESOURCE,[ 	AgentFacts::AT_HOME,
+																																				AgentFacts::GOT_RESOURCE ]))
+
+			@expert_system.add_rule(Rule.new(AgentFacts::CHANGE_DIRECTION,[ AgentFacts::NOTHING_SEEN,
+																																			AgentFacts::CHANGE_DIRECTION_TIME ]))
+
+			@expert_system.add_rule(Rule.new(AgentFacts::CHANGE_DIRECTION, [AgentFacts::TAKE_RESOURCE]))
+
+			@expert_system.add_rule(Rule.new(AgentFacts::CHANGE_DIRECTION, [AgentFacts::PUT_DOWN_RESOURCE]))
 		end
 
 		def infer
@@ -98,6 +128,7 @@ module MASWithTwoNests
 
 		def update_facts(tick)
 			if @has_resource
+				@expert_system.set_fact_value(AgentFacts::GOT_RESOURCE, true)
 			else
 				@expert_system.set_fact_value(AgentFacts::NO_RESOURCE, true)
 			end
@@ -110,6 +141,25 @@ module MASWithTwoNests
 
 			if @seen_resource
 				@expert_system.set_fact_value(AgentFacts::SEE_RESOURCE, true)
+				if @take_resource
+					if @seen_resource.life > @taken_resource.life
+						@expert_system.set_fact_value(AgentFacts::BIGGER_RESOURCE, true)
+					else
+						@expert_system.set_fact_value(AgentFacts::SMALLER_RESOURCE, true)
+					end
+				end
+			else
+				@expert_system.set_fact_value(AgentFacts::NOTHING_SEEN, true)
+			end
+
+			if @home
+				if is_collided?(@home)
+					@expert_system.set_fact_value(AgentFacts::AT_HOME, true)
+				else
+					@expert_system.set_fact_value(AgentFacts::NOT_SEEING_HOME, true)
+				end
+			else
+				@expert_system.set_fact_value(AgentFacts::NOT_SEEING_HOME, true)
 			end
 		end
 
@@ -119,6 +169,40 @@ module MASWithTwoNests
 				@direction.normalize!
 				@seen_resource = nil
 			end
+		end
+
+		def take_resource
+			if @reached_resource
+				@reached_resource.decrease_life
+				@has_resource = true
+				@taken_resource = @reached_resource
+				@last_reached_resource = @reached_resource
+				@reached_resource = nil
+			end
+			@seen_resource = nil
+		end
+
+		def go_home
+			if (@home_position)
+				@direction = @home_position - @target_point
+				@direction.normalize!
+			end
+		end
+
+		def put_down_resource
+			if (@home)
+				@home.add_resource
+				@home = nil
+			else
+				if @reached_resource
+					@reached_resource.increase_life
+					@last_reached_resource = @reached_resource
+					@reached_resource = nil
+					@taken_resource = nil
+				end
+			end
+			@has_resource = false
+			@taken_resource = nil
 		end
 
 		def act
@@ -135,7 +219,7 @@ module MASWithTwoNests
 
 			@target_point.x = current_point.x + @direction.x * real_speed * tick.seconds
 			@target_point.y = current_point.y + @direction.y * real_speed * tick.seconds
-			self.current_point = @target_point unless @world.is_out?(@target_point)
+			super()
 		end
 
 		def is_collided?(agent)

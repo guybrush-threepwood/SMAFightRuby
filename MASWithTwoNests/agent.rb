@@ -15,8 +15,11 @@ module MASWithTwoNests
       @target_point = Point.new
       @direction = Point.new
       @dead = false
-    end
-		
+		end
+
+		def move
+			self.current_point = @target_point unless @world.is_out?(@target_point)
+		end
     def current_point
       Point.new(rect.center[0], rect.center[1])
     end

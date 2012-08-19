@@ -50,8 +50,7 @@ module MASWithTwoNests
 			
 			@target_point.x += @direction.x * @speed * tick.seconds
 			@target_point.y += @direction.y * @speed * tick.seconds
-
-			self.current_point = @target_point unless @world.is_out?(@target_point)
+			super()
 		end
   end
 end

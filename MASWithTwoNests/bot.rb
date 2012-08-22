@@ -143,7 +143,7 @@ module MASWithTwoNests
 
 			if @seen_resource
 				@expert_system.set_fact_value(AgentFacts::SEE_RESOURCE, true)
-				if @take_resource
+				if @taken_resource
 					if @seen_resource.life > @taken_resource.life
 						@expert_system.set_fact_value(AgentFacts::BIGGER_RESOURCE, true)
 					else

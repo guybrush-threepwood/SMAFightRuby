@@ -15,8 +15,8 @@ module MASWithTwoNests
   class World
     attr_accessor :home_getting_bigger
     attr_accessor :bot_start_from_home
-		attr_accessor :agents
 		attr_accessor :screen
+		attr_reader 	:agents
 
     WIDTH = 600
     HEIGHT = 600
@@ -59,6 +59,10 @@ module MASWithTwoNests
 			bot_team = BotTeam.new(self, "DefaultTeam", Rubygame::Color::ColorRGB.new([0.4, 0.4, 0.4]), [AgentType::AGENT_BOT], BOT_COUNT/2)
 			@bot_teams << bot_team
     end
+
+		def add_agent(agent)
+			@agents << agent if agent.class.ancestors.include?(Agent)
+		end
 
     def update(tick)
 			@background.blit @screen, [0, 0]

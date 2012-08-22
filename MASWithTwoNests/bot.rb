@@ -12,11 +12,13 @@ require 'resource'
 require 'world'
 require 'rubygame'
 require 'bot_home'
+require 'resource'
 
 module MASWithTwoNests
 	class Bot < Agent
 		attr_reader :home_position
 		attr_reader :team_id
+		attr_accessor :has_resource
 		def initialize(world, team_id, color, radius, speed, direction_change_delay, perception_radius)
 			super(world)
 			@team_id = team_id
@@ -207,7 +209,7 @@ module MASWithTwoNests
 
 		def act
 			@expert_system.inferred_facts.each do |fact|
-				self.send(fact.action) if fact.action
+				send(fact.action) if fact.action
 			end
 		end
 
@@ -220,6 +222,20 @@ module MASWithTwoNests
 			@target_point.x = current_point.x + @direction.x * real_speed * tick.seconds
 			@target_point.y = current_point.y + @direction.y * real_speed * tick.seconds
 			super()
+		end
+
+		def steal_resource(bot)
+			bot.has_resource = false
+			@has_resource = true
+		end
+
+		def drop_resource
+			drop(Resource.new(@world, World::RESOURCE_UPDATE_VALUE, World::RESOURCE_MOVE_DELAY, World::RESOURCE_MOVE_SPEED)) if @has_resource
+		end
+
+		def drop(agent)
+			agent.target_point = Point.new(@target_point.x, @target_point.y)
+			@world.add_agent(agent)
 		end
 
 		def is_collided?(agent)

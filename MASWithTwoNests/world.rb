@@ -15,7 +15,6 @@ module MASWithTwoNests
   class World
     attr_accessor :home_getting_bigger
     attr_accessor :bot_start_from_home
-		attr_accessor :screen
 		attr_reader 	:agents
 
     WIDTH = 600
@@ -47,21 +46,28 @@ module MASWithTwoNests
       @bot_start_from_home = bot_start_from_home
       @background = Rubygame::Surface.new([WIDTH, HEIGHT])
       @agents = Rubygame::Sprites::Group.new
-			@bot_teams = []
-			@resources = []
 			Rubygame::Sprites::UpdateGroup.extend_object @agents
+			@immortal_agents = []
+
 			RESOURCE_COUNT.times do
 				resource = Resource.new(self, RESOURCE_START_LIFE, RESOURCE_MOVE_DELAY * rand, RESOURCE_MOVE_SPEED * rand)
 				resource.target_point = Point.new(rand * WIDTH, rand * HEIGHT)
-				@resources << resource
-				@agents << resource
+				add_agent(resource)
 			end
-			bot_team = BotTeam.new(self, "DefaultTeam", Rubygame::Color::ColorRGB.new([0.4, 0.4, 0.4]), [AgentType::AGENT_BOT], BOT_COUNT/2)
+
+			@bot_teams = []
+			bot_team = BotTeam.new(self, "DefaultTeam", Rubygame::Color::ColorRGB.new([0.4, 0.4, 0.4]), [AgentType::AGENT_BOT], BOT_COUNT / 2)
 			@bot_teams << bot_team
     end
 
 		def add_agent(agent)
-			@agents << agent if agent.class.ancestors.include?(Agent)
+			ancestors = agent.class.ancestors
+			if ancestors.include?(Agent)
+				@agents << agent
+				if ancestors.include?(Bot) or ancestors.include?(BotHome)
+					@immortal_agents << agent
+				end
+			end
 		end
 
     def update(tick)
@@ -69,7 +75,7 @@ module MASWithTwoNests
 			@agents.undraw @screen, @background
       @agents.update(tick, self)
 			@agents.draw @screen
-			clean_dead_resources
+			clean_dead_agents
 			check_collisions
     end
 
@@ -79,12 +85,9 @@ module MASWithTwoNests
 
 		private
 
-		def clean_dead_resources
-			@resources.each do |r|
-				if r.dead
-					@agents.delete(r)
-					@resources.delete(r)
-				end
+		def clean_dead_agents
+			@agents - @immortal_agents.each do |r|
+				@agents.delete(r) if r.dead
 			end
 		end
 

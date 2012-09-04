@@ -32,8 +32,8 @@ module Lib
       @x = length_scale if @x > length_scale
       @y = length_scale if @y > length_scale
       while length < length_scale
-        @x = @x + 1
-        @y = @y + 1
+        @x += 1
+        @y += 1
       end
     end
   end

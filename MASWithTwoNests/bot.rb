@@ -209,7 +209,7 @@ module MASWithTwoNests
 
 		def act
 			@expert_system.inferred_facts.each do |fact|
-				send(fact.action) if fact.action
+				send(fact.action)
 			end
 		end
 

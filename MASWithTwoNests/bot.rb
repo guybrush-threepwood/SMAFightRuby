@@ -192,7 +192,7 @@ module MASWithTwoNests
 		end
 
 		def put_down_resource
-			if (@home)
+			if @home
 				@home.add_resource
 				@home = nil
 			else
